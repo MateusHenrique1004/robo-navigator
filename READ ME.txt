@@ -1,0 +1,36 @@
+Projeto - Robô Navigator
+
+Este projeto implementa e exibe a movimentação de um robô em um grid 10x10, 
+utilizando diferentes algoritmos de busca para encontrar o melhor caminho 
+entre um ponto inicial e um objetivo. 
+
+Tecnologias utilizadas:
+- Python (Flask) – Backend
+- HTML, CSS e JavaScript – Frontend
+
+COMO RODAR O PROJETO:
+
+1. Este projeto utiliza o Flask para criar uma aplicação web local. Na pasta do projeto, abra o terminal e execute o comando: python app.py
+   Caso o Flask ainda não esteja instalado, utilize o comando para instalar: pip install flask
+
+2. O servidor vai estar disponível no endereço: http://127.0.0.1:5000
+   DICA: Para uma melhor visualização da interface, utilize o navegador no modo claro. (modo escuro pode dificultar a visualização de alguns elementos).
+
+Algoritmos de busca disponíveis:
+
+Amplitude; Profundidade; Profundidade Limitada (é necessário informar um valor de limite); Aprofundamento Iterativo; Bidirecional; Custo Uniforme; Greedy; A*; AIA*.
+
+Observações Importantes:
+
+- O programa exibirá uma mensagem de erro e não permitirá a execução caso:
+  > a célula de origem seja um obstáculo;
+  > a célula de destino seja um obstáculo;
+  > a célula de origem ou destino esteja cercada por obstáculos.
+
+- Os obstáculos são gerados automaticamente a cada recarregamento de página.
+  Para obter um novo mapa, basta atualizar o navegador.
+
+- Os quatro últimos algoritmos (Custo Uniforme, Greedy, A* e AIA*) compartilham uma estrutura 
+  comum de busca otimizada, usando uma função interna reutilizável para evitar duplicação de código. 
+  Isso significa que, embora cada um tenha lógica própria para o cálculo de custo, todos utilizam 
+  a mesma base de processamento de nós, lista de visitação e reconstrução de caminho.

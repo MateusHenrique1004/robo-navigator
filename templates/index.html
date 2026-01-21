@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto de IA - Caminho do Robô</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>Robô Navigator</h1>
+                <p>Defina o ponto de início e o destino para que o robô encontre o caminho ideal utilizando algoritmos de busca.</p>
+            </div>
+            
+            <div class="sidebar-form">
+                <label for="inicio">Início (ex: 0,8):</label>
+                <input type="text" id="inicio" name="inicio" placeholder="Coluna, Linha">
+            
+                <label for="objetivo">Objetivo (ex: 4,5):</label>
+                <input type="text" id="objetivo" name="objetivo" placeholder="Coluna, Linha">
+            
+                <label for="metodo">Método de Busca:</label>
+                <select id="metodo" name="metodo">
+                    <option value="amplitude">Amplitude</option>
+                    <option value="profundidade">Profundidade</option>
+                    <option value="profundidade-limitada">Profundidade Limitada</option>
+                    <option value="aprofundamento-iterativo">Aprofundamento Iterativo</option>
+                    <option value="bidirecional">Bidirecional</option>
+                    <option value="custo-uniforme">Custo Uniforme</option>
+                    <option value="greedy">Greedy</option>
+                    <option value="a-estrela">A*</option>
+                    <option value="aia-estrela">AIA*</option>
+                </select>
+            
+                <div id="limite-container" style="display: none; margin-top: 10px;">
+                    <label for="limite">Limite de Profundidade:</label>
+                    <input type="number" id="limite" name="limite" min="1" max="100" placeholder="Ex: 50">
+                </div>
+            
+                <button id="btnConcluir" type="button">Concluir</button>
+            </div>
+
+            <div class="sidebar-info">
+                <h3>Algoritmos Disponíveis</h3>
+                <ul>
+                    <li><strong>Amplitude (BFS):</strong> Garante o menor número de passos.</li>
+                    <li><strong>Profundidade (DFS):</strong> Vai fundo antes de explorar outras opções.</li>
+                    <li><strong>Profundidade Limitada:</strong> DFS com limite de profundidade.</li>
+                    <li><strong>Aprofundamento Iterativo:</strong> DFS com limites crescentes.</li>
+                    <li><strong>Bidirecional:</strong> Busca a partir do início e do fim ao mesmo tempo.</li>
+                    <li><strong>Custo Uniforme:</strong> Encontra o caminho de menor custo total.</li>
+                    <li><strong>Greedy:</strong> Escolhe caminhos com menor estimativa até o fim.</li>
+                    <li><strong>A*:</strong> Combina custo real e estimado (ótimo e eficiente).</li>
+                    <li><strong>AIA*:</strong> Versão iterativa do A* com limiar adaptativo.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="grid">
+                {% for i in range(mapa|length) %}
+                    <div class="row">
+                        {% for j in range(mapa[i]|length) %}
+                            <div class="cell {% if mapa[i][j] == 1 %}obstacle{% endif %}" 
+                                 data-row="{{ i }}" data-col="{{ j }}"></div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>      
+            <div class="path-container">
+                <label for="caminho">Caminho Percorrido:</label>
+                <input type="text" id="caminho" name="caminho" readonly>
+            </div>                  
+        </div>
+    </div>
+
+    <input type="hidden" id="mapa" name="mapa" value='{{ mapa|tojson }}'>
+
+    <script>
+        function limparGrid() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => cell.classList.remove('robot'));
+            document.getElementById('caminho').value = "";
+        }
+
+        function animarCaminho(caminho) {
+            limparGrid();
+            let i = 0;
+            let caminhoTexto = caminho.map(pos => `(${pos[0]},${pos[1]})`).join(", ");
+
+            document.getElementById('caminho').value = caminhoTexto;
+
+            function animar() {
+                if (i < caminho.length) {
+                    const [row, col] = caminho[i];
+                    const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                    if (cell && !cell.classList.contains('obstacle')) {
+                        cell.classList.add('robot');
+                    }
+                    i++;
+                    setTimeout(animar, 500);
+                }
+            }
+            animar();
+        }
+
+        document.getElementById("metodo").addEventListener("change", function () {
+            const limiteContainer = document.getElementById("limite-container");
+            if (this.value === "profundidade-limitada") {
+                limiteContainer.style.display = "block";
+            } else {
+                limiteContainer.style.display = "none";
+            }
+        });
+
+        document.getElementById('btnConcluir').addEventListener('click', function() {
+            const inicio = document.getElementById('inicio').value.trim();
+            const objetivo = document.getElementById('objetivo').value.trim();
+            const metodo = document.getElementById('metodo').value;
+            const limite = document.getElementById('limite').value.trim();
+            const mapa = document.getElementById('mapa').value;
+
+            if (metodo === "profundidade-limitada" && limite === "") {
+                alert("Por favor, defina um limite de profundidade.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("inicio", inicio);
+            formData.append("objetivo", objetivo);
+            formData.append("metodo", metodo);
+            formData.append("mapa", mapa);
+
+            if (metodo === "profundidade-limitada") {
+                formData.append("limite", limite);
+            }
+
+            fetch("/", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) {
+                    alert(data.erro);
+                    return;
+                }
+
+                if (data.caminho && data.caminho.length > 0) {
+                    animarCaminho(data.caminho);
+                } else {
+                    alert("Caminho não encontrado ou inválido.");
+                }
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+            });
+        });
+    </script>
+</body>
+</html>
