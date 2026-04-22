@@ -1,37 +1,48 @@
-Robô Navigator – Algoritmos de Busca em Grafos
+🤖 Robô Navigator – Algoritmos de Busca em Grafos
 
-Este projeto é uma aplicação web que simula a movimentação de um robô em um grid 10x10, utilizando diferentes algoritmos de busca em grafos para encontrar o melhor caminho entre um ponto inicial e um ponto objetivo.
+Este projeto é uma aplicação web interativa que simula a navegação de um robô em um grid 10x10, utilizando diferentes algoritmos de busca para encontrar o melhor caminho entre um ponto inicial e um objetivo.
 
-A aplicação permite visualizar, de forma interativa, como cada algoritmo se comporta diante de obstáculos gerados dinamicamente, facilitando o entendimento e a comparação entre as estratégias de busca.
+A proposta é permitir a visualização prática e comparativa dos algoritmos, demonstrando como cada estratégia se comporta diante de obstáculos gerados dinamicamente.
 
-Algoritmos de Busca Implementados
+🚀 Funcionalidades
+Simulação de movimentação de um robô em ambiente controlado
+Geração dinâmica de obstáculos
+Visualização passo a passo dos algoritmos
+Comparação entre diferentes estratégias de busca
+Reconstrução do caminho encontrado
+🧠 Algoritmos Implementados
 
-O sistema oferece suporte aos seguintes algoritmos:
+O sistema conta com diversos algoritmos clássicos de busca em grafos:
 
-- Busca em Amplitude (BFS)
-- Busca em Profundidade (DFS)
-- Busca em Profundidade Limitada
-- Aprofundamento Iterativo
-- Busca Bidirecional
-- Busca de Custo Uniforme
-- Busca Gulosa (Greedy)
-- A*
-- AIA* (A* Iterativo)
+Busca em Amplitude (BFS)
+Busca em Profundidade (DFS)
+Busca em Profundidade Limitada
+Aprofundamento Iterativo
+Busca Bidirecional
+Busca de Custo Uniforme
+Busca Gulosa (Greedy)
+A*
+AIA* (A* Iterativo)
+⚙️ Estrutura e Arquitetura
 
-> Os algoritmos Custo Uniforme, Greedy, A* e AIA* utilizam uma estrutura de busca otimizada compartilhada, com reaproveitamento de lógica para:
-> - controle de nós visitados  
-> - expansão de estados  
-> - reconstrução do caminho final
+Os algoritmos de busca informada (Custo Uniforme, Greedy, A* e AIA*) compartilham uma base otimizada, permitindo reutilização de código e melhor organização do projeto.
 
-> Cada algoritmo diferencia-se apenas pela função de custo/heurística, evitando duplicação de código e melhorando a organização do projeto.
+Essa estrutura inclui:
 
-Tecnologias Utilizadas
+Controle de nós visitados
+Expansão de estados
+Reconstrução do caminho final
 
+Cada algoritmo se diferencia apenas pela função de custo ou heurística, evitando duplicação e facilitando manutenção e escalabilidade.
+
+🛠️ Tecnologias Utilizadas
 Backend
-- Python
-- Flask
-
+Python
+Flask
 Frontend
-- HTML
-- CSS
-- JavaScript
+HTML
+CSS
+JavaScript
+🎯 Objetivo do Projeto
+
+Este projeto foi desenvolvido com foco educacional, visando facilitar o entendimento de algoritmos de busca por meio de visualização prática e interativa, além de demonstrar boas práticas de organização e reutilização de código.
